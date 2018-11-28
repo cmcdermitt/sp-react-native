@@ -1,18 +1,11 @@
 import React from 'react';
-import { Text, View, WebView, StyleSheet } from 'react-native';
+import { Text, View, WebView, StyleSheet, Button } from 'react-native';
 import { Location, Permissions, Calendar } from 'expo';
 
 //the code stuff
 
-
-
-var currentLocation;
-
-getLocationAsync().then(locationSuccessCallback, locationFailureCallback);
-
-getEventsAsync().then(eventSuccessCallback, eventFailureCallback);
-
-var isUpcoming = true;
+var currentLocation = getLocationAsync().then(locationSuccessCallback, locationFailureCallback);
+var events = getEventsAsync().then(eventSuccessCallback, eventFailureCallback);
 
 
 function locationSuccessCallback(result) {
@@ -26,9 +19,8 @@ function locationFailureCallback(error) {
 }
 
 function eventSuccessCallback(result) {
-  console.log(result)
-  console.log("The events are " + JSON.stringify(result));
-
+  events=result;
+  console.log("The events are " + JSON.stringify(events));
 }
 
 function eventFailureCallback(error) {
@@ -53,10 +45,8 @@ async function getEventsAsync() {
     for (cal in calendars) {
       ids.push(calendars[cal].id)
     }
-    console.log("ids is " + ids);
     //from one hour ago to one day in the future
     time = Date.now();
-    console.log("time is " + time);
     return Calendar.getEventsAsync(ids, time - 3.6e6, time + 8.64e+7);
   } else {
     throw new Error('Location permission not granted');
@@ -66,31 +56,43 @@ async function getEventsAsync() {
 //the layout stuff
 
 
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(props.event);
+    this.state = {
+      upcoming: {
+        startTime: new Date(props.event.startTime),
+        room: props.event.location,
+        name: props.event.title
+      }, 
+      dismissed: false
+    };
+  }
 
-function Header(props) {
-  if (isUpcoming) {
-    return (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>
-        Class in J156 in 5 minutes
-      </Text>
-    </View>
-    );
-  } else {
-    return null;
+  render() {
+    if (new Date(upcoming.startTime) && !dismissed) {
+      return (
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          {upcoming.name} in {upcoming.room} in {Math.round(Math.abs(startTime - new Date())/1000/60)}
+        </Text>
+      </View>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
-export default class PhoneAppForMobile extends React.Component {
+export default class OwlPathNative extends React.Component {
   render() {
+    console.log("events is: "+ JSON.stringify(events) + "\n\n");
+    console.log("events[0] is: " + JSON.stringify(events[0]));
     return (
       <View style={{flex: 1}}>
-        <Header/>
-        {/* <View style={styles.header}>
-          <Text style={styles.headerText}>
-            Class in J201 in 10 minutes
-          </Text>
-        </View> */}
+        <Header />
+        {/* <Header event={events[0]}/>first event in the list for now */}
         <WebView
           source={{uri: 'http://10.128.54.124:3000/'}}
           style={{flex: 1}}
