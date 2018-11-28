@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, WebView } from 'react-native';
+import { Text, View, WebView, StyleSheet } from 'react-native';
+import { Location, Permissions, Calendar } from 'expo';
 
 //the code stuff
 
-import { Location, Permissions, Calendar } from 'expo';
+
 
 var currentLocation;
 
@@ -11,6 +12,7 @@ getLocationAsync().then(locationSuccessCallback, locationFailureCallback);
 
 getEventsAsync().then(eventSuccessCallback, eventFailureCallback);
 
+var isUpcoming = true;
 
 
 function locationSuccessCallback(result) {
@@ -62,22 +64,54 @@ async function getEventsAsync() {
 }
 
 //the layout stuff
+
+
+
+function Header(props) {
+  if (isUpcoming) {
+    return (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>
+        Class in J156 in 5 minutes
+      </Text>
+    </View>
+    );
+  } else {
+    return null;
+  }
+}
+
 export default class PhoneAppForMobile extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <View style={{height: 100, backgroundColor: 'red' }}>
-          <Text>
-            hi this is an owlpath
+        <Header/>
+        {/* <View style={styles.header}>
+          <Text style={styles.headerText}>
+            Class in J201 in 10 minutes
           </Text>
-        </View>
+        </View> */}
         <WebView
           source={{uri: 'http://10.128.54.124:3000/'}}
-          style={{marginTop: 20, flex: 1}}
+          style={{flex: 1}}
           javaScriptEnabled={true}
-          geolocationEnabled={true}       />
+          geolocationEnabled={true}       
+        />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  header: {
+    height: 60,
+    backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  headerText: {
+    color: 'white',
+    fontSize: 25
+  }
+})
 
