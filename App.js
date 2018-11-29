@@ -1,7 +1,6 @@
 import React from 'react';
-import { Text, View, WebView, StyleSheet } from 'react-native';
+import { Text, View, WebView, StyleSheet, Button } from 'react-native';
 import { Location, Permissions, Calendar } from 'expo';
-import { Button } from 'react-native-material-ui';
 
 //the code stuff
 
@@ -21,7 +20,7 @@ function locationFailureCallback(error) {
 
 function eventSuccessCallback(result) {
   events=result;
-  // console.log("The events are " + JSON.stringify(events));
+  console.log("The events are " + JSON.stringify(events));
 }
 
 function eventFailureCallback(error) {
@@ -60,35 +59,24 @@ async function getEventsAsync() {
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    // console.log(props.event);
+    console.log(props.event);
     this.state = {
       upcoming: {
-        startTime: new Date(1543489200000),
-        room: "J152",
-        name: "CS 4850"
-        // startTime: new Date(props.event.startTime),
-        // room: props.event.location,
-        // name: props.event.title
+        startTime: new Date(props.event.startTime),
+        room: props.event.location,
+        name: props.event.title
       }, 
       dismissed: false
     };
   }
 
-  toggleDismissed() {
-    this.setState({dismissed: !this.state.dismissed})};
-
   render() {
-    if (!this.state.dismissed) {
+    if (new Date(upcoming.startTime) && !dismissed) {
       return (
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          {this.state.upcoming.name} in {this.state.upcoming.room} in {Math.round(Math.abs(this.state.upcoming.startTime - new Date())/1000/60)} minutes
+          {upcoming.name} in {upcoming.room} in {Math.round(Math.abs(startTime - new Date())/1000/60)}
         </Text>
-        <Button
-          raised
-          text="Dismiss"
-          onPress={this.toggleDismissed.bind(this)}
-        />
       </View>
       );
     } else {
@@ -99,8 +87,8 @@ class Header extends React.Component {
 
 export default class OwlPathNative extends React.Component {
   render() {
-    // console.log("events is: "+ JSON.stringify(events) + "\n\n");
-    // console.log("events[0] is: " + JSON.stringify(events[0]));
+    console.log("events is: "+ JSON.stringify(events) + "\n\n");
+    console.log("events[0] is: " + JSON.stringify(events[0]));
     return (
       <View style={{flex: 1}}>
         <Header />
@@ -118,15 +106,14 @@ export default class OwlPathNative extends React.Component {
 
 const styles = StyleSheet.create({
   header: {
-    height: 150,
-    backgroundColor: '#ffc425',
+    height: 60,
+    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center'
   },
   headerText: {
-    color: 'black',
-    fontSize: 24,
-    margin: 10
-  },
+    color: 'white',
+    fontSize: 25
+  }
 })
 
