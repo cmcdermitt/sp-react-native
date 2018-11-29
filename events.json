@@ -1,0 +1,89 @@
+[
+    {
+        "instanceId": "536",
+        "guestsCanInviteOthers": true,
+        "guestsCanModify": false,
+        "accessLevel": "default",
+        "endTimeZone": null,
+        "organizerEmail": "charliemc1996@gmail.com",
+        "originalId": null,
+        "recurrenceRule": {
+            "frequency": "weekly"
+        },
+        "timeZone": "America/New_York",
+        "notes": "",
+        "id": "729",
+        "calendarId": "1",
+        "endDate": "2018-11-28T23:15:00.000Z",
+        "guestsCanSeeGuests": true,
+        "title": "CS 4732",
+        "alarms": [
+            {
+                "method": "alert",
+                "relativeOffset": -10
+            }
+        ],
+        "startDate": "2018-11-28T22:00:00.000Z",
+        "allDay": false,
+        "location": "J130",
+        "availability": "busy"
+    },
+    {
+        "instanceId": "571",
+        "guestsCanInviteOthers": true,
+        "guestsCanModify": false,
+        "accessLevel": "default",
+        "endTimeZone": null,
+        "organizerEmail": "charliemc1996@gmail.com",
+        "originalId": null,
+        "recurrenceRule": {
+            "frequency": "weekly"
+        },
+        "timeZone": "America/New_York",
+        "notes": "",
+        "id": "730",
+        "calendarId": "1",
+        "endDate": "2018-11-29T02:15:00.000Z",
+        "guestsCanSeeGuests": true,
+        "title": "CS 4850",
+        "alarms": [
+            {
+                "method": "alert",
+                "relativeOffset": -10
+            }
+        ],
+        "startDate": "2018-11-29T01:00:00.000Z",
+        "allDay": false,
+        "location": "J161",
+        "availability": "busy"
+    },
+    {
+        "instanceId": "643",
+        "guestsCanInviteOthers": true,
+        "guestsCanModify": false,
+        "accessLevel": "default",
+        "endTimeZone": null,
+        "organizerEmail": "charliemc1996@gmail.com",
+        "originalId": null,
+        "recurrenceRule": {
+            "frequency": "weekly"
+        },
+        "timeZone": "America/New_York",
+        "notes": "",
+        "id": "732",
+        "calendarId": "1",
+        "endDate": "2018-11-29T15:45:00.000Z",
+        "guestsCanSeeGuests": true,
+        "title": "HON 4490",
+        "alarms": [
+            {
+                "method": "alert",
+                "relativeOffset": -60
+            }
+        ],
+        "startDate": "2018-11-29T14:30:00.000Z",
+        "allDay": false,
+        "location": "University College 202",
+        "availability": "busy"
+    }
+]
