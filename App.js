@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View, WebView, StyleSheet, Button } from 'react-native';
+import { Text, View, WebView, StyleSheet, SectionList } from 'react-native';
 import { Location, Permissions, Calendar } from 'expo';
+import { Button, Drawer, ListItem } from 'react-native-material-ui';
 
 //the code stuff
 
@@ -20,7 +21,7 @@ function locationFailureCallback(error) {
 
 function eventSuccessCallback(result) {
   events=result;
-  console.log("The events are " + JSON.stringify(events));
+  // console.log("The events are " + JSON.stringify(events));
 }
 
 function eventFailureCallback(error) {
@@ -55,28 +56,71 @@ async function getEventsAsync() {
 
 //the layout stuff
 
+function eventListObj(props) {
+  this.props.events.map((item) => {
+  return (
+    <ListItem
+    divider
+    leftElement = {item.title}
+    centerElement = {item.location}
+    rightElement = {new Date(item.startDate).toLocaleTimeString()}
+    numberOfLines = {'dynamic'}
+    key = {key}
+  />);
+  });
+}
+
+class Schedule extends React.Component {
+  constructor (props) {
+    super(props);
+  }
+  
+  render () {
+    return (
+      <View>
+        <Text> My Classes </Text>
+        <SectionList>
+          <eventListObj events={this.props.events} />
+        </SectionList>
+      </View>
+    );
+  }
+}
+
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props.event);
+    // console.log(props.event);
     this.state = {
       upcoming: {
-        startTime: new Date(props.event.startTime),
-        room: props.event.location,
-        name: props.event.title
+        startTime: new Date(1543489200000),
+        room: "J152",
+        name: "CS 4850"
+        // startTime: new Date(props.event.startTime),
+        // room: props.event.location,
+        // name: props.event.title
       }, 
       dismissed: false
     };
   }
 
+  toggleDismissed() {
+    this.setState({dismissed: !this.state.dismissed})
+  }
+
   render() {
-    if (new Date(upcoming.startTime) && !dismissed) {
+    if (!this.state.dismissed) {
       return (
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          {upcoming.name} in {upcoming.room} in {Math.round(Math.abs(startTime - new Date())/1000/60)}
+          {this.state.upcoming.name} in {this.state.upcoming.room} in {Math.round(Math.abs(this.state.upcoming.startTime - new Date())/1000/60)} minutes
         </Text>
+        <Button
+          raised
+          text="Dismiss"
+          onPress={this.toggleDismissed.bind(this)}
+        />
       </View>
       );
     } else {
@@ -86,13 +130,41 @@ class Header extends React.Component {
 }
 
 export default class OwlPathNative extends React.Component {
+  
+  toggleIsOpened() {
+    this.setState({isOpened: !this.state.isOpened});
+  }
+
   render() {
-    console.log("events is: "+ JSON.stringify(events) + "\n\n");
-    console.log("events[0] is: " + JSON.stringify(events[0]));
-    return (
+    // console.log("events is: "+ JSON.stringify(events) + "\n\n");
+    // console.log("events[0] is: " + JSON.stringify(events[0]));
+    if (scheduleOpen) {return (
       <View style={{flex: 1}}>
         <Header />
-        {/* <Header event={events[0]}/>first event in the list for now */}
+        <Schedule
+          events = {
+            {
+              title: "CS 2408",
+              location: "J201",
+              startDate: new Date()
+            },
+            {
+              title: "CS 4102",
+              location: "J212",
+              startDate: new Date()
+            },
+            {
+              title: "CS 2132",
+              location: "J129",
+              startDate: new Date()
+            }
+          }
+          style={styles.schedule}
+        />
+      </View>
+    );} else { return (
+      <View style={{flex: 1}}>
+        <Header />
         <WebView
           source={{uri: 'http://10.128.54.124:3000/'}}
           style={{flex: 1}}
@@ -100,20 +172,32 @@ export default class OwlPathNative extends React.Component {
           geolocationEnabled={true}       
         />
       </View>
-    );
+    );}
+  }
+
+  constructor (props) {
+    super(props);
+    this.state = {
+      scheduleOpen: false
+    };
   }
 }
 
 const styles = StyleSheet.create({
   header: {
-    height: 60,
-    backgroundColor: 'green',
+    height: 150,
+    backgroundColor: '#ffc425',
     alignItems: 'center',
     justifyContent: 'center'
   },
   headerText: {
-    color: 'white',
-    fontSize: 25
+    color: 'black',
+    fontSize: 24,
+    margin: 10
+  },
+  schedule: {
+    flex: 1,
+    //backgroundColor = primary
   }
 })
 
