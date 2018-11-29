@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, WebView, StyleSheet, SectionList } from 'react-native';
 import { Location, Permissions, Calendar } from 'expo';
-import { Button, Drawer, ListItem } from 'react-native-material-ui';
+import { Button, Drawer, ListItem, ActionButton } from 'react-native-material-ui';
 
 //the code stuff
 
@@ -70,11 +70,7 @@ function eventListObj(props) {
   });
 }
 
-class Schedule extends React.Component {
-  constructor (props) {
-    super(props);
-  }
-  
+class Schedule extends React.Component {  
   render () {
     return (
       <View>
@@ -94,12 +90,12 @@ class Header extends React.Component {
     // console.log(props.event);
     this.state = {
       upcoming: {
-        startTime: new Date(1543489200000),
-        room: "J152",
-        name: "CS 4850"
-        // startTime: new Date(props.event.startTime),
-        // room: props.event.location,
-        // name: props.event.title
+        // startTime: new Date(1543489200000),
+        // room: "J152",
+        // name: "CS 4850"
+        startDate: new Date(props.event.startDate),
+        room: props.event.location,
+        name: props.event.title
       }, 
       dismissed: false
     };
@@ -114,7 +110,7 @@ class Header extends React.Component {
       return (
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          {this.state.upcoming.name} in {this.state.upcoming.room} in {Math.round(Math.abs(this.state.upcoming.startTime - new Date())/1000/60)} minutes
+          {this.state.upcoming.name} in {this.state.upcoming.room} in {Math.round(Math.abs(this.state.upcoming.startDate - new Date())/1000/60)} minutes
         </Text>
         <Button
           raised
@@ -131,14 +127,14 @@ class Header extends React.Component {
 
 export default class OwlPathNative extends React.Component {
   
-  toggleIsOpened() {
-    this.setState({isOpened: !this.state.isOpened});
+  toggleScheduleOpen() {
+    this.setState({scheduleOpen: !this.state.scheduleOpen});
   }
 
   render() {
     // console.log("events is: "+ JSON.stringify(events) + "\n\n");
     // console.log("events[0] is: " + JSON.stringify(events[0]));
-    if (scheduleOpen) {return (
+    if (this.state.scheduleOpen) {return (
       <View style={{flex: 1}}>
         <Header />
         <Schedule
@@ -165,12 +161,15 @@ export default class OwlPathNative extends React.Component {
     );} else { return (
       <View style={{flex: 1}}>
         <Header />
-        <WebView
+        <WebView>
           source={{uri: 'http://10.128.54.124:3000/'}}
           style={{flex: 1}}
           javaScriptEnabled={true}
           geolocationEnabled={true}       
-        />
+          <ActionButton
+            onPress={this.toggleScheduleOpen}
+          />
+          </WebView>
       </View>
     );}
   }
