@@ -15,25 +15,25 @@ const uiTheme = {
 
 //the layout stuff
 
-function eventListObj(props) {
-  this.props.events.map((item) => {
-  return (
-    <ListItem
-    divider
-    leftElement = {item.title}
-    centerElement = {item.location}
-    rightElement = {new Date(item.startDate).toLocaleTimeString()}
-    numberOfLines = {'dynamic'}
-    key = {key}
-  />);
-  });
-}
+// function eventListObj(props) {
+//   this.props.events.map((item) => {
+  // return (
+  //   <ListItem
+  //   divider
+  //   leftElement = {item.title}
+  //   centerElement = {item.location}
+  //   rightElement = {new Date(item.startDate).toLocaleTimeString()}
+  //   numberOfLines = {'dynamic'}
+  //   key = {key}
+  // />);
+//   });
+// }
 
 class Schedule extends React.Component {
   constructor (props){
     super(props);
     this.state = {
-      isOpen: true
+      isOpen: false
     }
   } 
 
@@ -41,8 +41,29 @@ class Schedule extends React.Component {
     this.setState({isOpen: !this.state.isOpen});
   }
 
+  renderRow( event ) {
+    console.log('rendering row');
+    console.log(JSON.stringify(event));
+    return (
+      <View style={styles.listItem}>
+        <Text style={styles.listText}>{event.item.title} in {event.item.location} at {new Date(event.item.startDate).toLocaleTimeString()}</Text>
+      </View>
+    );
+    // return (
+    // <ListItem
+    //   divider
+    //   leftElement = {
+    //     event.title
+    //   }
+    //   centerElement = {{
+    //     primaryText: event.location
+    //   }}
+    //   rightElement = {new Date(event.startDate).toLocaleTimeString()}
+    // />);
+  }
+
   render () {
-    if (!isOpen) {
+    if (!this.state.isOpen) {
       console.log('rendering ActionButton');
       return (
         <View style={backgroundColor='rgba(255, 255, 255, 0.0)'}>
@@ -55,17 +76,23 @@ class Schedule extends React.Component {
     } else { //if isOpen
       console.log('rendering schedule');
       return (
-        <View style={{flex: 1, backgroundColor:'orange'}}>
-          <Text> My Classes </Text>
-          {console.log(JSON.stringify(eventListObj))}
-          <FlatList>
-            <eventListObj events={this.props.events} />
-          </FlatList>
+        <View style={{flex: 1}}>
+        <View style={{width: Dimensions.get('window').width, backgroundColor: COLOR.pinkA400, height: 75, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{fontSize: 30, color:'white'}}> My Classes </Text>
+        </View>
+          <FlatList
+            data = {this.props.events}
+            renderItem = {this.renderRow}
+            keyExtractor = {event => event.instanceId}
+            style={{width: Dimensions.get('window').width, backgroundColor: COLOR.indigo500}}
+            contentContainerStyle={{alignItems: 'center'}}
+         />
           <Button
             raised
             accent
             text="Close"
-            onPress={toggleScheduleOpen.bind(this)}
+            onPress={this.toggleIsOpen.bind(this)}
+            style={{height: 75, width: Dimensions.get('window').width}}
           />
         </View>
       );
@@ -190,7 +217,7 @@ export default class OwlPathNative extends React.Component {
         console.log('rendering load screen');
         return (
           <ThemeContext.Provider value={getTheme(uiTheme)}>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: uiTheme.palette.primaryColor}}>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLOR.indigo500}}>
               <Text style={{fontSize: 24}}>
                 OwlPath
               </Text>
@@ -212,15 +239,15 @@ export default class OwlPathNative extends React.Component {
           <ThemeContext.Provider value={getTheme(uiTheme)}>
           <View style={{flex: 1}}>
             {/* <Header events = {this.props.events.filter(event => new Date(event.startDate).getTime() - Date.now() < 6.048e8)}/> */}
-            <Header events = {this.state.events} />
+            <Header events = {this.state.events.filter(event => event.location.substring(0, 2) == 'J1' || event.location.substring(0, 2) == 'J2')} />
             <WebView
-              source={{uri: 'http://10.100.81.150:3000/'}}
-              style={{flex: 1}}
+              source={{uri: 'http://10.128.54.124:3000/'}} //url of OwlPath web app
+              // style={{flex: 1}}
               javaScriptEnabled={true}
               geolocationEnabled={true}
             />
             <Schedule
-                events = {this.state.events}
+                events = {this.state.events.filter(event => event.location.substring(0, 2) == 'J1' || event.location.substring(0, 2) == 'J2')}
                 style={styles.schedule}
             />
           </View>
@@ -233,18 +260,35 @@ export default class OwlPathNative extends React.Component {
 const styles = StyleSheet.create({
   header: {
     height: 150,
-    backgroundColor: '#ffc425',
+    backgroundColor: COLOR.pinkA400,
     alignItems: 'center',
     justifyContent: 'center'
   },
   headerText: {
-    color: 'black',
+    color: 'white',
     fontSize: 24,
     margin: 10
   },
   schedule: {
-    flex: 1,
-    //backgroundColor = primary
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    left:0,
+    top:0,
+    position:'absolute',
+    backgroundColor: 'black',
+    alignItems: 'center'
+  },
+  listItem: {
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: 'white',
+    width: Dimensions.get('window').width * .9,
+    alignItems: 'center'
+  },
+  listText: {
+    margin: 15,
+    fontSize: 20,
+    color: 'black'
   }
 })
 
